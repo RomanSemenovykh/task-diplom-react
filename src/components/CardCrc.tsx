@@ -8,19 +8,26 @@ export interface CardProps {
 }
 
 /**
- * Карточка артиста или трека.
+ * Карточка артиста.
  * @param props.title Заголовок карточки
  * @param props.subtitle Подзаголовок (опционально)
  * @param props.img URL изображения (опционально)
  * @param props.url Ссылка, на которую ведёт кнопка
  */
-const Card: React.FC<CardProps> = ({ title, subtitle = '', img, url }) => (
-  <div className="card">
-    <img src={img || 'https://via.placeholder.com/300x200?text=No+Image'} alt={title} />
-    <h3>{title}</h3>
-    {subtitle && <p>{subtitle}</p>}
-    <a href={url} target="_blank" rel="noreferrer">Перейти</a>
-  </div>
+const CardCrc: React.FC<CardProps> = ({ title, subtitle = '', img, url }) => (
+  <a
+    key={title}
+    href={url}
+    target="_blank"
+    rel="noreferrer"
+    className="card artist-card"
+  >
+    <img
+      src={img || 'https://placehold.co/300x300?text=No+Image'}
+      alt={title}
+    />
+    <span>{title}</span>
+  </a>
 );
 
-export default Card;
+export default CardCrc;

@@ -20,6 +20,16 @@ export interface Track {
   image: Array<{ '#text': string; size: string }>;
 }
 
+export interface Tag {
+  name: string;
+  count: number;
+  url: string;
+  wiki?: {
+    summary: string;
+    published: string;
+  };
+}
+
 /**
  * Результат поиска: массив артистов и массив треков.
  */
@@ -36,7 +46,7 @@ const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
  * @returns Promise с массивом Artist
  */
 export async function fetchTopArtists(): Promise<Artist[]> {
-  const res = await fetch(`${BASE_URL}?method=chart.gettopartists&api_key=${API_KEY}&format=json&limit=9`);
+  const res = await fetch(`${BASE_URL}?method=chart.gettopartists&api_key=${API_KEY}&format=json&limit=12`);
   const data = await res.json();
   return data.artists.artist as Artist[];
 }
@@ -46,7 +56,7 @@ export async function fetchTopArtists(): Promise<Artist[]> {
  * @returns Promise с массивом Track
  */
 export async function fetchTopTracks(): Promise<Track[]> {
-  const res = await fetch(`${BASE_URL}?method=chart.gettoptracks&api_key=${API_KEY}&format=json&limit=9`);
+  const res = await fetch(`${BASE_URL}?method=chart.gettoptracks&api_key=${API_KEY}&format=json&limit=12`);
   const data = await res.json();
   return data.tracks.track as Track[];
 }
@@ -58,12 +68,50 @@ export async function fetchTopTracks(): Promise<Track[]> {
  */
 export async function search(query: string): Promise<SearchResult> {
   const [trackRes, artistRes] = await Promise.all([
-    fetch(`${BASE_URL}?method=track.search&track=${encodeURIComponent(query)}&api_key=${API_KEY}&format=json&limit=9`).then(r => r.json()),
-    fetch(`${BASE_URL}?method=artist.search&artist=${encodeURIComponent(query)}&api_key=${API_KEY}&format=json&limit=9`).then(r => r.json()),
+    fetch(`${BASE_URL}?method=track.search&track=${encodeURIComponent(query)}&api_key=${API_KEY}&format=json&limit=12`).then(r => r.json()),
+    fetch(`${BASE_URL}?method=artist.search&artist=${encodeURIComponent(query)}&api_key=${API_KEY}&format=json&limit=12`).then(r => r.json()),
   ]);
 
   return {
     tracks: (trackRes.results.trackmatches.track as Track[]) || [],
     artists: (artistRes.results.artistmatches.artist as Artist[]) || []
   };
+}
+
+/**
+ * Выполняет поиск популяпеых треков.
+ * @param limit количество
+ * @returns Promise с результатом поиска (SearchResult)
+ */
+export async function fetchTopTags(limit = 20): Promise<Tag[]> {
+  const res = await fetch(
+    `${BASE_URL}?method=chart.getTopTags&api_key=${API_KEY}&format=json&limit=${limit}`
+  );
+  const json = await res.json();
+  return json.tags.tag as Tag[];
+}
+
+/**
+ * Получает информация о для тега.
+ * @param tag название
+ * @returns Promise с результатом поиска (SearchResult)
+ */
+export async function fetchTagDetails(tag: string): Promise<Tag & { topArtists: Artist[] }> {
+  const [infoRes, artistsRes] = await Promise.all([
+    fetch(
+      `${BASE_URL}?method=tag.getInfo&tag=${encodeURIComponent(tag)}&api_key=${API_KEY}&format=json`
+    ).then(r => r.json()),
+    fetch(
+      `${BASE_URL}?method=tag.getTopArtists&tag=${encodeURIComponent(tag)}&api_key=${API_KEY}&format=json&limit=4`
+    ).then(r => r.json()),
+  ]);
+
+  const tagInfo: Tag = {
+    name: infoRes.tag.name,
+    count: infoRes.tag.reach,
+    url: infoRes.tag.url,
+    wiki: infoRes.tag.wiki,
+  };
+  const topArtists: Artist[] = artistsRes.topartists.artist;
+  return { ...tagInfo, topArtists };
 }

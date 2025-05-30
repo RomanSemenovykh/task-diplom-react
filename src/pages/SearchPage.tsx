@@ -1,84 +1,171 @@
 import React, { useState, FormEvent } from 'react';
 import { SearchResult, search } from '../api';
-import Card from '../components/Card';
-import Grid from '../components/Grid';
+import Section from '../components/Section';
+import CardGrid from '../components/CardGrid';
+import CardSqr from '../components/CardSqr';
+import CardList from '../components/CardList';
+import CardRow from '../components/CardRow';
+import TrackRow from '../components/TrackRow';
+import TagGrid from '../components/TagGrid';
+
+type Tab = 'all' | 'artists' | 'tracks';
 
 /**
- * Страница поиска: форма, индикатор загрузки и результаты.
+ * Страница поиска с тремя табами: Все, Исполнители и Треки.
  */
 const SearchPage: React.FC = () => {
   const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<SearchResult>({ artists: [], tracks: [] });
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [tab, setTab] = useState<Tab>('all');
 
-  /**
-   * Обработчик сабмита формы поиска.
-   * @param e Событие отправки формы
-   */
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!query.trim()) return;
     setLoading(true);
-    try {
-      const res = await search(query);
-      setResults(res);
-      setHasSearched(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    const res = await search(query);
+    setResults(res);
+    setHasSearched(true);
+    setLoading(false);
+    setTab('all');
   };
 
   return (
-    <section>
-      <h2>Поиск</h2>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Введите исполнителя или трек"
-        />
-        <button type="submit">Поиск</button>
-      </form>
+    <>
+      {/* Форма поиска */}
+      <Section title="Поиск">
+        <form onSubmit={onSubmit} className="search-form">
+          <input
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Введите исполнителя или трек"
+          />
+          <button type="submit">&#128269;</button>
+        </form>
+        {loading && <p>Загрузка…</p>}
+      </Section>
 
-      {loading && <p>Загрузка...</p>}
-
-      {hasSearched && !loading && (
-        <>
-          <h3>Исполнители</h3>
-          <Grid>
-            {results.artists.map(artist => (
-              <Card
-                key={artist.name}
-                title={artist.name}
-                img={artist.image?.[2]['#text']}
-                url={artist.url}
-              />
-            ))}
-          </Grid>
-
-          <h3>Треки</h3>
-          <Grid>
-            {results.tracks.map(track => (
-              <Card
-                key={track.url}
-                title={track.name}
-                subtitle={
-                  typeof track.artist === 'string'
-                    ? track.artist
-                    : track.artist.name
-                }
-                img={track.image?.[2]['#text']}
-                url={track.url}
-              />
-            ))}
-          </Grid>
-        </>
+      {!hasSearched && !loading && (
+        <TagGrid />
       )}
-    </section>
+      {/* Результаты */}
+      {hasSearched && !loading && (
+        <Section title="Результаты поиска">
+          {/* Табы */}
+          <div className="tabs">
+            <button
+              className={tab === 'all' ? 'tab active' : 'tab'}
+              onClick={() => setTab('all')}
+            >
+              Все
+            </button>
+            <button
+              className={tab === 'artists' ? 'tab active' : 'tab'}
+              onClick={() => setTab('artists')}
+            >
+              Исполнители
+            </button>
+            <button
+              className={tab === 'tracks' ? 'tab active' : 'tab'}
+              onClick={() => setTab('tracks')}
+            >
+              Треки
+            </button>
+          </div>
+
+          {/* Контент табов */}
+          {tab === 'all' && (
+            <>
+              <Section title="Исполнители">
+                {results.artists.length > 0 ? (
+                  <CardGrid<import('../api').Artist>
+                    data={results.artists}
+                    className="grid-dense"
+                    renderItem={artist => (
+                      <CardSqr
+                        key={artist.name}
+                        title={artist.name}
+                        subtitle={`Слушателей: ${artist.listeners}`}
+                        img={artist.image?.[3]['#text']}
+                        url={artist.url}
+                      />
+                    )}
+                  />
+                ) : (
+                  <p>Артисты не найдены.</p>
+                )}
+              </Section>
+
+              <Section title="Треки">
+                {results.tracks.length > 0 ? (
+                  <CardList<import('../api').Track>
+                    data={results.tracks}
+                    renderItem={track => (
+                      <TrackRow
+                        key={track.url}
+                        name={track.name}
+                        artist={
+                          typeof track.artist === 'string'
+                            ? track.artist
+                            : track.artist.name
+                        }
+                        url={track.url}
+                      />
+                    )}
+                  />
+                ) : (
+                  <p>Треки не найдены.</p>
+                )}
+              </Section>
+            </>
+          )}
+
+          {tab === 'artists' && (
+            <Section title="Исполнители">
+              {results.artists.length > 0 ? (
+                <CardGrid<import('../api').Artist>
+                  data={results.artists}
+                  className='card-row-grid'
+                  renderItem={artist => (
+                    <CardRow
+                      title={artist.name}
+                      subtitle={`Слушателей: ${artist.listeners}`}
+                      img={artist.image?.[3]['#text']}
+                      url={artist.url}
+                    />
+                  )}
+                />
+              ) : (
+                <p>Артисты не найдены.</p>
+              )}
+            </Section>
+          )}
+
+          {tab === 'tracks' && (
+            <Section title="Треки">
+              {results.tracks.length > 0 ? (
+                <CardGrid<import('../api').Track>
+                  data={results.tracks}
+                  className='card-row-grid'
+                  renderItem={track => (
+                    <CardRow
+                      title={track.name}
+                      subtitle={`Слушателей: ${track.listeners}`}
+                      img={track.image?.[3]['#text']}
+                      url={track.url}
+                    />
+                  )}
+                />
+              ) : (
+                <p>Треки не найдены.</p>
+              )}
+            </Section>
+          )}
+        </Section>
+      )}
+    </>
   );
 };
 

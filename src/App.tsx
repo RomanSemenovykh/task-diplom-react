@@ -1,24 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
-import ArtistsPage from './pages/ArtistsPage';
-import TracksPage from './pages/TracksPage';
+import Footer from './components/Footer';
 import SearchPage from './pages/SearchPage';
+import TopPage from './pages/TopPage';
 
 /**
- * Основной компонент приложения с маршрутизацией.
+ * Основной компонент с маршрутами.
  */
 const App: React.FC = () => (
   <Router>
     <Header />
     <main>
       <Routes>
-        <Route path="/" element={<Navigate to="/search" replace />} />
-        <Route path="/artists" element={<ArtistsPage />} />
-        <Route path="/tracks" element={<TracksPage />} />
-        <Route path="/search" element={<SearchPage />} />
+        <Route path="/"        element={<Navigate to="/top" replace />} />
+        <Route path="/search"  element={<SearchPage />} />
+        <Route path="/top"     element={<TopPage />} />
       </Routes>
     </main>
+    <Footer />
   </Router>
 );
 
