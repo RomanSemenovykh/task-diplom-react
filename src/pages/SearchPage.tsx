@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { SearchResult, search } from '../api';
+import { IArtist, ITrack, ISearchResult, search } from '../api';
 import Section from '../components/Section';
 import CardGrid from '../components/CardGrid';
 import CardSqr from '../components/CardSqr';
@@ -15,7 +15,7 @@ type Tab = 'all' | 'artists' | 'tracks';
  */
 const SearchPage: React.FC = () => {
   const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState<SearchResult>({ artists: [], tracks: [] });
+  const [results, setResults] = useState<ISearchResult>({ artists: [], tracks: [] });
   const [loading, setLoading] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [tab, setTab] = useState<Tab>('all');
@@ -80,7 +80,7 @@ const SearchPage: React.FC = () => {
             <>
               <Section title="Исполнители">
                 {results.artists.length > 0 ? (
-                  <CardGrid<import('../api').Artist>
+                  <CardGrid<IArtist>
                     data={results.artists}
                     className="grid-dense"
                     renderItem={artist => (
@@ -100,7 +100,7 @@ const SearchPage: React.FC = () => {
 
               <Section title="Треки">
                 {results.tracks.length > 0 ? (
-                  <CardList<import('../api').Track>
+                  <CardList<ITrack>
                     data={results.tracks}
                     renderItem={track => (
                       <TrackRow
@@ -125,7 +125,7 @@ const SearchPage: React.FC = () => {
           {tab === 'artists' && (
             <Section title="Исполнители">
               {results.artists.length > 0 ? (
-                <CardGrid<import('../api').Artist>
+                <CardGrid<IArtist>
                   data={results.artists}
                   className='card-row-grid'
                   renderItem={artist => (
@@ -146,7 +146,7 @@ const SearchPage: React.FC = () => {
           {tab === 'tracks' && (
             <Section title="Треки">
               {results.tracks.length > 0 ? (
-                <CardGrid<import('../api').Track>
+                <CardGrid<ITrack>
                   data={results.tracks}
                   className='card-row-grid'
                   renderItem={track => (

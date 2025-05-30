@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Artist, Track, fetchTopArtists, fetchTopTracks } from '../api';
+import { IArtist, ITrack, fetchTopArtists, fetchTopTracks } from '../api';
 import Section from '../components/Section';
 import CardGrid from '../components/CardGrid';
 import CardCrc from '../components/CardCrc';
@@ -10,8 +10,8 @@ import TrackItem from '../components/TrackItem';
  * Страница «Топ исполнителей и топ треков».
  */
 const TopPage: React.FC = () => {
-  const [artists, setArtists] = useState<Artist[]>([]);
-  const [tracks, setTracks]   = useState<Track[]>([]);
+  const [artists, setArtists] = useState<IArtist[]>([]);
+  const [tracks, setTracks]   = useState<ITrack[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const TopPage: React.FC = () => {
         {loading ? (
           <p>Загрузка…</p>
         ) : (
-          <CardGrid<import('../api').Artist>
+          <CardGrid<IArtist>
               data={artists}
               className='card-grid-hot'
               renderItem={artist => (
@@ -50,7 +50,7 @@ const TopPage: React.FC = () => {
         {loading ? (
           <p>Загрузка…</p>
         ) : (
-          <TrackGrid<import('../api').Track>
+          <TrackGrid<ITrack>
               data={tracks}
               renderItem={track => (
                 <TrackItem

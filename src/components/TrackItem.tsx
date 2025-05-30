@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface TrackItemProps {
+export interface ITrackItemProps {
   name: string;
   artist: string;
   url: string;
@@ -14,7 +14,7 @@ export interface TrackItemProps {
  * @param props.img URL изображения (опционально)
  * @param props.url Ссылка, на которую ведёт кнопка
  */
-const TrackItem: React.FC<TrackItemProps> = ({ name, artist, url, img }) => (
+const TrackItem: React.FC<ITrackItemProps> = ({ name, artist, url, img }) => (
   <a
     href={url}
     target="_blank"

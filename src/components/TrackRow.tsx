@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface TrackRowProps {
+export interface ITrackRowProps {
   name: string;
   artist: string;
   url: string;
@@ -12,7 +12,7 @@ export interface TrackRowProps {
  * @param props.artist Исполнитель
  * @param props.url Ссылка, на которую ведёт кнопка
  */
-const TrackRow: React.FC<TrackRowProps> = ({ name, artist, url }) => (
+const TrackRow: React.FC<ITrackRowProps> = ({ name, artist, url }) => (
   <div className="track-row">
     <button className="track-play" aria-label="Play">
       ▶︎

@@ -1,19 +1,19 @@
 import React from 'react';
-import { Artist } from '../api';
+import { IArtist } from '../api';
 
-export interface BigTagCardProps {
+export interface IBigTagCardProps {
   title: string;
   summary: string;
   imageUrl: string;
   url: string;
-  topArtists: Artist[];
+  topArtists: IArtist[];
   className?: string;
 }
 
 /**
  * Большая карточка жанра.
  */
-const BigTagCard: React.FC<BigTagCardProps> = ({ title, summary, imageUrl, url, topArtists, className }) => (
+const BigTagCard: React.FC<IBigTagCardProps> = ({ title, summary, imageUrl, url, topArtists, className }) => (
   <a href={url} target="_blank" rel="noreferrer" className={`big-tag-card ${className || ''}`}>
     <div
       className="big-tag-bg"

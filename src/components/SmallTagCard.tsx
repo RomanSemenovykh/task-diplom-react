@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface SmallTagCardProps {
+export interface ISmallTagCardProps {
   name: string;
   imageUrl: string;
   url: string;
@@ -10,7 +10,7 @@ export interface SmallTagCardProps {
 /**
  * Маленькая плитка жанра.
  */
-const SmallTagCard: React.FC<SmallTagCardProps> = ({ name, imageUrl, url, className }) => (
+const SmallTagCard: React.FC<ISmallTagCardProps> = ({ name, imageUrl, url, className }) => (
   <a href={url} target="_blank" rel="noreferrer" className={`small-tag-card ${className || ''}`}>
     <div
       className="small-tag-bg"

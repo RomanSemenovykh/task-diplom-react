@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface SectionProps {
+interface ISectionProps {
   title: string;
   children: React.ReactNode;
 }
@@ -8,7 +8,7 @@ interface SectionProps {
 /**
  * Блочный раздел с заголовком.
  */
-const Section: React.FC<SectionProps> = ({ title, children }) => (
+const Section: React.FC<ISectionProps> = ({ title, children }) => (
   <div className="section">
     <h2>{title}</h2>
     {children}

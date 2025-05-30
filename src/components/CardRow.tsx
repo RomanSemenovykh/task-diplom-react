@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface CardProps {
+export interface ICardProps {
   title: string;
   subtitle?: string;
   img?: string;
@@ -14,7 +14,7 @@ export interface CardProps {
  * @param props.img URL изображения (опционально)
  * @param props.url Ссылка, на которую ведёт кнопка
  */
-const CardRow: React.FC<CardProps> = ({ title, subtitle = '', img, url }) => (
+const CardRow: React.FC<ICardProps> = ({ title, subtitle = '', img, url }) => (
   <a
     href={url}
     target="_blank"

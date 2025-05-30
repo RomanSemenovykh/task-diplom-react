@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface GridProps {
+export interface IGridProps {
   children: React.ReactNode;
 }
 
@@ -8,7 +8,7 @@ export interface GridProps {
  * Контейнер-сетка для карточек.
  * @param props.children Массив карточек внутри сетки
  */
-const Grid: React.FC<GridProps> = ({ children }) => (
+const Grid: React.FC<IGridProps> = ({ children }) => (
   <div className="grid">{children}</div>
 );
 

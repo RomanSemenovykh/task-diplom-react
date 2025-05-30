@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface CardListProps<T> {
+interface ICardListProps<T> {
   data: T[];
   renderItem: (item: T) => React.ReactNode;
 }
@@ -8,7 +8,7 @@ interface CardListProps<T> {
 /**
  * Список элементов (треки).
  */
-const CardList = <T extends unknown>({ data, renderItem }: CardListProps<T>) => (
+const CardList = <T extends unknown>({ data, renderItem }: ICardListProps<T>) => (
   <div className="card-list">
     {data.map((item, i) => <React.Fragment key={i}>{renderItem(item)}</React.Fragment>)}
   </div>

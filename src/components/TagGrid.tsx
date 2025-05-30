@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Tag, fetchTopTags, fetchTagDetails, Artist } from '../api';
+import { ITag, fetchTopTags, fetchTagDetails, IArtist } from '../api';
 import Section from './Section';
 import BigTagCard from './BigTagCard';
 import SmallTagCard from './SmallTagCard';
 
 const TagGrid: React.FC = () => {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [mainTags, setMainTags] = useState<(Tag & { topArtists: Artist[]; wikiText: string })[]>([]);
+  const [tags, setTags] = useState<ITag[]>([]);
+  const [mainTags, setMainTags] = useState<(ITag & { topArtists: IArtist[]; wikiText: string })[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
